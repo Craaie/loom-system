@@ -1,0 +1,6 @@
+app
+backend
+db
+output
+tests
+uploads

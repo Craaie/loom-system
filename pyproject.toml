@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "loom-system"
+version = "0.1.0"
+description = "A multi-agent long-text to video automation pipeline based on LangGraph."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "langgraph>=0.1.0",
+    "langchain-google-genai>=1.0.0",
+    "langchain-openai>=0.1.0",
+    "langchain-community>=0.0.30",
+    "pydantic>=2.7.0",
+    "pydantic-settings>=2.2.0",
+    "chromadb>=0.4.24",
+    "aiolimiter>=1.1.0",
+    "tenacity>=8.2.3",
+    "fastapi>=0.110.0",
+    "uvicorn>=0.29.0",
+    "streamlit>=1.33.0",
+    "python-dotenv>=1.0.1",
+    "ffmpeg-python>=0.2.0",
+    "langsmith>=0.1.0",
+    "python-multipart>=0.0.9",
+    "dashscope>=1.25.15",
+    "aiofiles>=25.1.0",
+    "pymunk>=7.2.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["backend"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["backend"]
+asyncio_mode = "auto"

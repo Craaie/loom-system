@@ -1,0 +1,91 @@
+Metadata-Version: 2.4
+Name: loom-system
+Version: 0.1.0
+Summary: A multi-agent long-text to video automation pipeline based on LangGraph.
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: langgraph>=0.1.0
+Requires-Dist: langchain-google-genai>=1.0.0
+Requires-Dist: langchain-openai>=0.1.0
+Requires-Dist: langchain-community>=0.0.30
+Requires-Dist: pydantic>=2.7.0
+Requires-Dist: pydantic-settings>=2.2.0
+Requires-Dist: chromadb>=0.4.24
+Requires-Dist: aiolimiter>=1.1.0
+Requires-Dist: tenacity>=8.2.3
+Requires-Dist: fastapi>=0.110.0
+Requires-Dist: uvicorn>=0.29.0
+Requires-Dist: streamlit>=1.33.0
+Requires-Dist: python-dotenv>=1.0.1
+Requires-Dist: ffmpeg-python>=0.2.0
+Requires-Dist: langsmith>=0.1.0
+Requires-Dist: python-multipart>=0.0.9
+Requires-Dist: dashscope>=1.25.15
+Requires-Dist: aiofiles>=25.1.0
+Requires-Dist: pymunk>=7.2.0
+
+# 织影系统 (Loom System)
+
+织影系统是一个基于 LangGraph 的多智能体长文本转视频自动化管线。它能够将长篇小说自动拆解为分镜脚本，并通过异步并发驱动视频生成模型（如 Kling 3.0），最终合成完整的短视频内容。
+
+## 核心特性
+
+- **双层 RAG 角色记忆**：基于实体抽取的长效视觉一致性维护。
+- **智能模型路由**：自动在 Ollama（本地）与云端 API 之间分配任务。
+- **人机协作 (HITL)**：关键节点人工审批，集成超时自动降级策略。
+- **实时成本熔断**：内置 API 消耗审计，达到阈值自动挂起任务。
+- **高并发合成**：基于 `asyncio` + `aiolimiter` 的视频生成限流驱动。
+
+## 技术栈
+
+- **Orchestration**: LangGraph (TypedDict + Channel Reducers)
+- **Concurrency**: Python `asyncio` + `Semaphore` + `aiolimiter`
+- **Database**: SQLite (MVP Checkpointer) / PostgreSQL (Scale)
+- **Vector DB**: ChromaDB
+- **LLM/VFM**: Ollama, DeepSeek, Kling 3.0
+- **Assembly**: FFmpeg
+
+## 快速开始
+
+### 1. 环境配置
+
+本项目建议使用 `uv` 或 `venv` 进行管理。
+
+```bash
+# 创建虚拟环境
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 安装依赖
+pip install -r requirements.txt
+```
+
+### 2. 环境变量
+
+复制 `.env.example` 并填写你的 API Keys：
+
+```bash
+cp .env.example .env
+```
+
+### 3. 运行系统
+
+```bash
+python main.py
+```
+
+## 项目结构
+
+详细设计参考 [docs/implementation-plan-v1.md](docs/implementation-plan-v1.md)。
+
+- `core/`: 核心引擎与状态定义
+- `agents/`: 各类原子智能体（解析、分镜、生成）
+- `modules/`: 内存、合成、成本控制通用模块
+- `ui/`: 基于 Streamlit 的审批界面
+- `tests/`: 自动化与 E2E 测试
+
+cd backend
+uv run uvicorn app.main:app --port 8000 --reload
+
+cd frontend 
+npm run dev
